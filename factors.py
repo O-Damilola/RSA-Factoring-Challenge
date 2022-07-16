@@ -3,15 +3,15 @@
 import sys
 
 def factors(num):
-    lista = []
-    for i in range(num):
-        for j in range(num):
-            if num == i * j and i not in lista:
-                lista.append(i)
-                lista.append(j)
-    print("{:d} = {:d}*{:d}".format(num, lista[1], lista[0], end='\n'))
-
-
+    numz = (num//2) + 1
+    if num % 2 == 0:
+       print("{:d} = {:d}*2".format(num, num//2))
+    else:
+        for item in range(3, numz+2, 2):
+            if num % item == 0:
+                quotient = num // item   
+                print("{:d} = {:d}*{:d}".format(num, quotient, item))
+                break
 
 def sortfile(file=sys.argv[1]):
     inp_file = open(file)
