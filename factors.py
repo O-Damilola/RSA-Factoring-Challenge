@@ -1,38 +1,40 @@
 #!/usr/bin/python3
-
 import sys
 
 def factors(num):
-    numz = (num//2) + 1
+    num = int(num)
     if num % 2 == 0:
        print("{:d} = {:d}*2".format(num, num//2))
     else:
-        for item in range(3, numz+2, 2):
+        for item in range(3, num, 2):
             if num % item == 0:
-                quotient = num // item   
+                quotient = num//item   
                 print("{:d} = {:d}*{:d}".format(num, quotient, item))
                 break
 
 def sortfile(file=sys.argv[1]):
-    inp_file = open(file)
+    inp_file = open(file, "r")
     integers = []
-    for line in inp_file:
-        integers.append(int(line))
+    for k in inp_file:
+        integers += k.strip().split()
     inp_file.close()
-    integers.sort()
-    integers = map(str, integers)
-    integers = list(integers)
+    integers = map(int, integers)
+    tigers = list(integers)
+    tigers.sort()
+    tigers = map(str, tigers)
+    tigers = list(tigers)
     out_file = open("result", "w")
-    for j in integers:
+    for j in tigers:
         out_file.writelines(j)
         out_file.writelines('\n')
-    out_file.close
+    out_file.close()
 
 def main():
     filey = sortfile(sys.argv[1])
     with open("result") as f:
         for num in f:
-            factors(int(num))
+            numz = int(num[:-1])
+            factors(numz)
 
 if __name__ == "__main__" :
     main()
