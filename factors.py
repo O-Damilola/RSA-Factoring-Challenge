@@ -2,6 +2,7 @@
 import sys
 
 def factors(num):
+    """ Prints the factors of the input num """
     num = int(num)
     if num % 2 == 0:
        print("{:d} = {:d}*2".format(num, num//2))
@@ -13,6 +14,7 @@ def factors(num):
                 break
 
 def sortfile(file=sys.argv[1]):
+    """ Sort the content of the input file in ascending order """
     inp_file = open(file, "r")
     integers = []
     for k in inp_file:
@@ -30,6 +32,7 @@ def sortfile(file=sys.argv[1]):
     out_file.close()
 
 def main():
+    """ performs the factorisation of the input"""
     filey = sortfile(sys.argv[1])
     with open("result") as f:
         for num in f:
