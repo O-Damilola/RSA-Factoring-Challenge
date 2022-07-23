@@ -1,43 +1,70 @@
 #!/usr/bin/python3
-import sys
+from random import randint
 
-def factors(num):
-    """ Prints the factors of the input num """
-    num = int(num)
-    if num % 2 == 0:
-       print("{:d} = {:d}*2".format(num, num//2))
-    else:
-        for item in range(3, num, 2):
-            if num % item == 0:
-                quotient = num//item   
-                print("{:d} = {:d}*{:d}".format(num, quotient, item))
+
+def gcd(a, b):
+    """ Returns the greatest common divisor of the two numbers
+    """
+    while b:
+        a, b = b, a % b
+    return a
+
+
+def _pollard_brent_func(c, n, x):
+    """ Return f(x) = (x^2 + c) % n
+        Assume c < n
+    """
+    y = (x ** 2) % n + c
+    if y >= n:
+        y -= n
+
+    assert 0 <= y < n
+    return y
+
+
+def brent_factorise(n, iterations=None):
+    """ Perform Brent's variant of Pollard's rho factorization algorithm to
+        attempt to find a non-trivial factor of the given number number, n.
+        If iterations > 0, return None if no factors are found within its range
+    """
+    y, c, m = (randint(1, n - 1) for _ in range(3))
+    r, q, g = 1, 1, 1
+    i = 0
+    while g == 1:
+        x = y
+        for _ in range(r):
+            y = _pollard_brent_func(c, n, y)
+        k = 0
+        while k < r and g == 1:
+            ys = y
+            for _ in range(min(m, r - k)):
+                y = _pollard_brent_func(c, n, y)
+                q = (q * abs(x - y)) %  n
+            g = gcd(q, n)
+            k += m
+        r *= 2
+        if iterations:
+            i += 1
+            if i == iterations:
+                return None
+
+    if g == n:
+        while True:
+            ys = _pollard_brent_func(c, n, ys)
+            g = gcd(abs(x - ys), n)
+            if g > 1:
                 break
+    return g
 
-def sortfile(file=sys.argv[1]):
-    """ Sort the content of the input file in ascending order """
-    inp_file = open(file, "r")
-    integers = []
-    for k in inp_file:
-        integers += k.strip().split()
-    inp_file.close()
-    integers = map(int, integers)
-    tigers = list(integers)
-    tigers.sort()
-    tigers = map(str, tigers)
-    tigers = list(tigers)
-    out_file = open("result", "w")
-    for j in tigers:
-        out_file.writelines(j)
-        out_file.writelines('\n')
-    out_file.close()
 
-def main():
-    """ performs the factorisation of the input"""
-    filey = sortfile(sys.argv[1])
-    with open("result") as f:
-        for num in f:
-            numz = int(num[:-1])
-            factors(numz)
+if __name__ == '__main__':
+    from sys import argv
 
-if __name__ == "__main__" :
-    main()
+    if len(argv) != 2:
+        exit(1)
+
+    with open(argv[1], "r") as f:
+        for i in f:
+            n = int(i[:-1])
+            res = brent_factorise(n)
+            print("{}={}*{}".format(n, n // res, res))
