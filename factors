@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from random import randint
+import random
 
 
 def gcd(a, b):
@@ -27,7 +27,7 @@ def brent_factorise(n, iterations=None):
         attempt to find a non-trivial factor of the given number number, n.
         If iterations > 0, return None if no factors are found within its range
     """
-    y, c, m = (randint(1, n - 1) for _ in range(3))
+    y, c, m = (random.randint(1, n - 1) for _ in range(3))
     r, q, g = 1, 1, 1
     i = 0
     while g == 1:
